@@ -1,0 +1,15 @@
+.header {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 1rem;
+	align-items: center;
+}
+
+.header .menu {
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.header .session {
+	text-align: right;
+}

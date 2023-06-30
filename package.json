@@ -1,0 +1,21 @@
+{
+	"name": "react-mern",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-react-swc": "3.3.2",
+		"eslint": "8.43.0",
+		"eslint-plugin-react": "^7.32.2",
+		"vite": "4.3.9"
+	},
+	"dependencies": {
+		"react": "18.2.0",
+		"react-dom": "18.2.0"
+	}
+}
