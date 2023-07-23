@@ -2,10 +2,7 @@ import { EVENTS } from './consts'
 import { useEffect, useState } from 'react'
 import { getCurrentPath } from './utils'
 
-function Router({
-	routes = [],
-	DefaultComponent: DefaultComponent = () => <h1>404</h1>,
-}) {
+function Router({ routes = [], DefaultComponent: DefaultComponent = () => <h1>404</h1> }) {
 	const [currentPath, setCurrentPath] = useState(getCurrentPath())
 
 	useEffect(() => {
@@ -25,25 +22,13 @@ function Router({
 
 	let routeParams = {}
 
-	/* const routesFromChildren = Children.map(children, ({ props, type }) => {
-		const { name } = type
-
-		const isRoute = name === 'Route'
-
-		return isRoute ? props : null
-	}) */
-
-	// const routesToUse = routes.concat(routesFromChildren).filter(Boolean)
-
 	const Page = routes.find(({ path }) => {
 		if (path === currentPath) return true
 
 		const isDynamic = path.includes(':')
 
 		if (isDynamic) {
-			const pathRegex = new RegExp(
-				path.replace(/:[a-zA-Z]+/g, '([a-zA-Z0-9]+)')
-			)
+			const pathRegex = new RegExp(path.replace(/:[a-zA-Z]+/g, '([a-zA-Z0-9]+)'))
 
 			const match = currentPath.match(pathRegex)
 
@@ -64,11 +49,7 @@ function Router({
 		}
 	})?.Component
 
-	return Page ? (
-		<Page routeParams={routeParams} />
-	) : (
-		<DefaultComponent routeParams={routeParams} />
-	)
+	return Page ? <Page routeParams={routeParams} /> : <DefaultComponent routeParams={routeParams} />
 }
 
 export default Router

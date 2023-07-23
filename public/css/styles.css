@@ -1,0 +1,35 @@
+/* Lo usaremos para cuando el texto sea muy grande, lo que hare sera recorrerlo de arriba hacia abajo */
+@keyframes slide {
+	0% {
+		transform: translateX(0);
+	}
+
+	100% {
+		transform: translateX(-100px);
+	}
+}
+
+.notification {
+	position: absolute;
+	bottom: 5vw;
+	right: 5vw;
+	border-radius: 8px;
+	max-width: 200px;
+	max-height: 64px;
+	padding: 5px;
+	cursor: default;
+
+	white-space: normal;
+
+	-webkit-box-orient: vertical;
+	-moz-box-flex: 1;
+	-webkit-line-clamp: 3;
+	-webkit-box-align: end;
+	display: -webkit-box;
+
+	overflow-y: hidden;
+}
+
+.notification p {
+	margin: 0;
+}

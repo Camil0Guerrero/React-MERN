@@ -1,109 +1,65 @@
 import { createContext, useEffect, useState } from 'react'
-import { API_URL } from '../consts'
+import { API_URL, API_URL_USER } from '../consts'
 import { navigate } from '../components/Link'
+import fetchData from '../hooks/fetchData'
 
 const SessionContext = createContext()
 
 export const SessionProvider = ({ children }) => {
-	const [session, setSession] = useState({
-		id: 3,
-		name: 'jane',
-		password: 'Ca234567',
-		email: 'jane_67@gmail.com',
-		balance: 10000,
-		movements: [
-			{
-				date: '2021-08-01T00:00:00.000Z',
-				amount: 1000,
-				description: 'Salary',
-				destination: 'John Doe',
-			},
-		],
-	})
+	// El operador && hace que si el primer valor es falsy, se retorne el segundo valor
+	const [session, setSession] = useState(JSON.parse(sessionStorage.getItem('user') && null))
 	const [error, setError] = useState(null)
 
-	const [ip] = useState(
-		Math.floor(Math.random() * 255) +
-			Math.floor(Math.random() * 255) +
-			Math.floor(Math.random() * 255) +
-			Math.floor(Math.random() * 255)
-	)
-
+	// Si el usuario ha iniciado sesión anteriormente, obtenemos su información
 	useEffect(() => {
-		fetch(`${API_URL}session`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ ip }),
-		})
-			.then(res => {
-				if (res.status === 204) {
-					// setSession(null)
+		fetchData(API_URL_USER)
+			.then(data => {
+				if (data.error || data instanceof Error || data.message) {
+					localStorage.removeItem('session')
 					return
 				}
-				if (!res.ok) return
 
-				return res.json()
+				setSession(data)
 			})
-			.then(data => {
-				if (!data) return
-
-				const user = { name: data.name, id: data.id }
-
-				setSession({ user })
+			.catch(err => {
+				console.error(err)
 			})
-			.catch(err => console.log(err))
 	}, [])
 
 	const login = user => {
-		fetch(`${API_URL}login`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(user),
-		})
-			.then(res => {
-				if (res.status === 400) {
-					setError('Usuario o contraseña incorrectos')
+		fetchData(`${API_URL}login`, 'POST', user)
+			.then(data => {
+				if (data.error) {
+					setError(data.error)
 					return
 				}
 
-				if (!res.ok) throw new Error('Error al iniciar sesión')
-
-				return res.json()
-			})
-			.then(data => {
-				setSession(data)
+				localStorage.setItem('session', data.token)
+				delete data.user.id
+				sessionStorage.setItem('user', JSON.stringify(data.user))
+				setSession(data.user)
 				navigate('/')
 			})
-			.catch(err => console.log(err))
+			.catch(err => {
+				setError(err.message || 'Reviso tu conexión a internet')
+			})
 	}
 
 	const logout = () => {
 		localStorage.removeItem('session')
-
-		fetch(`${API_URL}session`, {
-			method: 'DELETE',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ ip }),
-		})
-			.then(res => {
-				if (!res.ok) throw new Error('Error al cerrar sesión', res)
-
-				setSession(null)
-			})
-			.catch(err => console.log(err))
+		sessionStorage.removeItem('user')
+		setSession(null)
+		navigate('/')
 	}
 
-	return (
-		<SessionContext.Provider value={{ session, login, logout, error }}>
-			{children}
-		</SessionContext.Provider>
-	)
+	const data = {
+		session,
+		login,
+		logout,
+		error,
+	}
+
+	return <SessionContext.Provider value={data}>{children}</SessionContext.Provider>
 }
 
 export default SessionContext

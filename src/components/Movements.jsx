@@ -1,25 +1,19 @@
 import { useContext } from 'react'
 import Table from './Table'
 import SessionContext from '../context/SessionContext'
+import MovementContext from '../context/MovementContext'
 import { navigate } from './Link'
 
 function Movements() {
 	const { session } = useContext(SessionContext)
-
-	console.log(session)
-
+	const { movements } = useContext(MovementContext)
 	if (!session) return navigate('/login')
 
 	return (
 		<>
 			<h2>Tus últimos 50 movimientos</h2>
 
-			{
-				<Table
-					headers={['Fecha', 'Monto', 'Descripción', 'Destino']}
-					data={session.movements}
-				/>
-			}
+			{<Table data={movements ?? []} />}
 		</>
 	)
 }

@@ -12,4 +12,5 @@
 
 .header .session {
 	text-align: right;
+	cursor: pointer;
 }

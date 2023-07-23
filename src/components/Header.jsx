@@ -11,6 +11,7 @@ function Header() {
 		logout()
 	}
 
+	console.log(session)
 	return (
 		<header className='header'>
 			{session ? <h2>Welcome {session.name}</h2> : <h2>Welcome</h2>}
@@ -18,7 +19,8 @@ function Header() {
 			<nav className='menu'>
 				<Link to='/'>Inicio</Link>
 				<Link to='/movement'>Movimientos</Link>
-				<Link to='/report'>Reportes</Link>
+				<Link to='/recharge'>Recargar</Link>
+				<Link to='/send'>Enviar</Link>
 			</nav>
 
 			{session ? (

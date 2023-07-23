@@ -16,6 +16,7 @@ const validatePassword = password => {
 
 const validateBalance = balance => {
 	const balanceNumber = Number(balance)
+
 	if (!balanceNumber) return false
 	if (balanceNumber < 1000) return false
 

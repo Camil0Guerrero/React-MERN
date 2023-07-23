@@ -3,6 +3,7 @@ import Header from './components/Header'
 import Router from './Router'
 import { SessionProvider } from './context/SessionContext'
 import { Suspense } from 'react'
+import '../public/css/styles.css'
 
 function App() {
 	return (

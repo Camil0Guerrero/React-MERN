@@ -1,28 +1,17 @@
-import { useContext } from 'react'
-import UserContext from '../context/UserContext'
-
-function TableRow({ item, operations = false }) {
-	const { setUserToEdit, deleteUser } = useContext(UserContext)
-
-	console.log(item)
-
+function TableRow({ item }) {
 	if (item.date) {
 		item.date = new Date(item.date).toUTCString().slice(5, 16)
 	}
 
+	const { amount, date, description, destination } = item
+
 	return (
 		<>
 			<tr>
-				{Object.entries(item).map(([key, value]) => (
-					<td key={key}>{value}</td>
-				))}
-
-				{operations && (
-					<td>
-						<button onClick={() => setUserToEdit(item)}>Editar</button>
-						<button onClick={() => deleteUser(item.id)}>Eliminar</button>
-					</td>
-				)}
+				<td>{date}</td>
+				<td>{amount}</td>
+				<td>{description}</td>
+				<td>{destination}</td>
 			</tr>
 		</>
 	)
